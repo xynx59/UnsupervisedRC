@@ -119,9 +119,9 @@ class SpeedTestDataTransform:
                             tmp_str = tmp_str[b1+1:]
                             b2 = tmp_str.find('/')
                             tmp_str = tmp_str[b2+1:]
-                            b3 = tmp_str.find(':')
+                            b3 = tmp_str.find(' ')
                             tmp_str = tmp_str[b3+1:]
-                            b4 = tmp_str.find(' ')
+                            b4 = tmp_str.find(':')
                             b2 += b1+1
                             b3 += b2+1
                             b4 += b3+1
@@ -135,9 +135,9 @@ class SpeedTestDataTransform:
                             if len(str_d) == 1:
                                 str_d = '0'+str_d
                             if len(str_h) == 1:
-                                str_d = '0'+str_h
+                                str_h = '0'+str_h
                             if len(str_min) == 1:
-                                str_d = '0'+str_min
+                                str_min = '0'+str_min
                             test_time[it] = str_y+'-'+str_m+'-'+str_d+' '+str_h+':'+str_min+':00'
                     
                 up_time = [round((time.mktime(time.strptime(a, date_format)) - b)/3600, 1)

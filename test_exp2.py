@@ -23,6 +23,7 @@ label_fs = True
 label_analysis = True
 label_test = True
 IGR_th = 0.05
+p_fp = 0.01
 imp_feature = ["DOWNLOAD_NNI_RTT_MS", "DOWNLOAD_UNI_RTT_MS", \
                 "DOWNLOAD_NNI_PLR", "DOWNLOAD_UNI_PLR", \
                 "UP_DATA_RTT_MS", \
@@ -69,7 +70,7 @@ if label_pre:
         
     obj2 = DataDeepTransform(obj.df)
     obj2.label_nan_cata(features=deep_feature)
-    obj2.remove_minor_cata(nth=np.int(N*0.01), features=deep_feature)
+    obj2.remove_minor_cata(nth=np.int(N*p_fp), features=deep_feature)
     pd_pre = obj.df
     pd_pre.to_csv('./sp0613/data_pre.csv')
 else:
@@ -134,8 +135,8 @@ if label_analysis:
     RC = RC_Analysis()
     RC.training(max_depth=4, pd_data=pd_training, cata_info=cata_info)# raw_DL_BW_100_UL_BW_50 #plan100_50_drop_duplicate_test
     #RC.KMeans_DT_clustering(n_clusters=10, max_depth=4, min_impurity_split=0.05, min_samples_split=5)
-    thresh_cnt = 150
-    imp_th = 0.03
+    thresh_cnt = 200
+    imp_th = 0.01
     RC.DT_Stage_I_Clustering(max_depth=4, min_impurity_split=0.05, min_samples_split=thresh_cnt)
     RC.FP_Stage_II_Clustering(imp_th=imp_th)
 #    RC.test_DT_FP(file_name='./sp0613/exp2_test.csv', outfile = './exp2_predict.csv', thresh_cnt = thresh_cnt)
@@ -158,7 +159,7 @@ if label_test:
         obj.df[col] = obj.df[col].astype(str)
     obj2 = DataDeepTransform(obj.df)
     obj2.label_nan_cata(features=deep_feature)
-    obj2.remove_minor_cata(nth=np.int(N*0.01), features=deep_feature)
+    obj2.remove_minor_cata(nth=np.int(N*p_fp), features=deep_feature)
     pd_test_pre = obj.df
     pd_test_numer = numerization_test(pd_test_pre, pd_bound)
     Col_slct = np.append(Col_slct,'FAULTCAUSE')

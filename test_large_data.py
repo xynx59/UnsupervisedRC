@@ -48,7 +48,7 @@ if label_pre:
     obj.convert_uptime(date_format="%Y-%m-%d %H:%M:%S", check_format=True)
     obj.update_port()
     obj.keep_based_on_columns()
-    obj.deep_cleanup(precise=False, data_format="%Y-%m-%d %H:%M:%S")
+    obj.deep_cleanup(precise=False, date_format="%Y-%m-%d %H:%M:%S")
     obj.df.drop(columns=['ACCOUNT', 'DATE_TIME', 'DAY', 'HOUR'], inplace=True)
     obj.remove_sparse_col(sparse_th=0.7)
     deep_feature=['LOCAL_IP', 'REMOTE_UP', 'IP_TYPE', 'IP_TYPE2', 'DEVICE_TYPE', \
@@ -104,13 +104,21 @@ if label_fs:
     M_imp = 0
     M = len(ufs_mi.all_IGR)
     for it in range(M):
-        if ufs_mi.all_IGR < IGR_th:
+        if ufs_mi.all_IGR[it] < IGR_th:
             M_imp = it
             break
     Col_slct = Col[ufs_mi.all_idx[:M_imp]]
     Col_slct = np.append(Col_slct, ["RESULT"])
-    pd_training = pd_feature[Col_slct]
+    pd_training = pd_numer[Col_slct]
     
 if label_analysis:
     """ RC Analysis """
-    pass
+    RC = RC_Analysis()
+    RC.training(max_depth=4, pd_data=pd_training, cata_info=cata_info)# raw_DL_BW_100_UL_BW_50 #plan100_50_drop_duplicate_test
+    #RC.KMeans_DT_clustering(n_clusters=10, max_depth=4, min_impurity_split=0.05, min_samples_split=5)
+    thresh_cnt = 200
+    imp_th = 0.01
+    RC.DT_Stage_I_Clustering(max_depth=4, min_impurity_split=0.05, min_samples_split=thresh_cnt)
+    RC.FP_Stage_II_Clustering(imp_th=imp_th)
+#    RC.test_DT_FP(file_name='./sp0613/exp2_test.csv', outfile = './exp2_predict.csv', thresh_cnt = thresh_cnt)
+#    RC.validate_DT_FP(file_name='./sp0613/exp2_test.csv', outfile='./exp2_RC_predict.csv', thresh_cnt = thresh_cnt)

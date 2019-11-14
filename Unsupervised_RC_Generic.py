@@ -487,7 +487,7 @@ class RC_Analysis(object):
         
         print(self.silhouette, self.intra_dist)
         
-        self.pd_RC = pd.DataFrame(data=RC.DT_FP_idx, columns=['DT_FP'])
+        self.pd_RC = pd.DataFrame(data=self.DT_FP_idx, columns=['DT_FP'])
         self.pd_RC['RC'] = self.RC_list
         self.pd_RC['pred_RC'] = self.pred_RC
         self.pd_RC.to_csv(outfile)
